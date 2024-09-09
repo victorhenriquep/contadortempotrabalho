@@ -21,6 +21,11 @@ body {
     text-align: center;
 }
 
+.titulo {
+    font-size: 30px;
+    padding-bottom: 0.8em;
+}
+
 label {
     display: block;
     margin: 10px 0;
@@ -48,4 +53,16 @@ button:hover {
 
 p {
     font-size: 20px;
+}
+
+.mensagem {
+    padding: 0.5em;
+}
+
+span {
+    font-weight: bold;
+}
+
+.work-hours {
+    padding-bottom: 1em;
 }

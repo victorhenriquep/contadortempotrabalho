@@ -8,19 +8,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Contador de Tempo no Trabalho</h1>
+        <h1 class="titulo">Contador de Tempo no Trabalho</h1>
+
+        <label for="work-hours">Escolha a Jornada de Trabalho:</label>
+        <select id="work-hours">
+            <option value="6">6 Horas</option>
+            <option value="8">8 Horas</option>
+        </select>
+
         <label for="start-time">Horário de Chegada:</label>
         <input type="time" id="start-time">
-        
-        <label for="end-time">Horário de Saída:</label>
-        <input type="time" id="end-time">
-        
+
         <div class="botao">
-        <button onclick="startTimer()">Iniciar</button>
+            <button onclick="startTimer()">Iniciar</button>
         </div>
+
         <div class="timer">
-            <p>Tempo Decorrido: <span id="elapsed-time">00:00:00</span></p>
-            <p>Tempo Restante: <span id="remaining-time">00:00:00</span></p>
+            <p class="mensagem">Tempo Decorrido: <span id="elapsed-time">00:00:00</span></p>
+            <p class="mensagem">Tempo Restante: <span id="remaining-time">00:00:00</span></p>
+            <p class="mensagem">Horário de Saída Esperado: <span id="expected-end-time">--:--</span></p>
         </div>
     </div>
     

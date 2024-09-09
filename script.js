@@ -1,59 +1,41 @@
-let timerInterval;
-
 function startTimer() {
-    clearInterval(timerInterval);
+    const startTimeInput = document.getElementById('start-time').value;
+    const workHoursInput = document.getElementById('work-hours').value;
 
-    const startTime = document.getElementById('start-time').value;
-    const endTime = document.getElementById('end-time').value;
-
-    if (!startTime || !endTime) {
-        alert('Por favor, insira ambos os horários.');
+    if (!startTimeInput) {
+        alert("Por favor, insira o horário de chegada.");
         return;
     }
 
-    const startDateTime = new Date();
-    const startHoursMinutes = startTime.split(':');
-    startDateTime.setHours(startHoursMinutes[0], startHoursMinutes[1]);
+    const startTime = new Date();
+    const [hours, minutes] = startTimeInput.split(':').map(Number);
+    startTime.setHours(hours, minutes, 0, 0);
 
-    const endDateTime = new Date();
-    const endHoursMinutes = endTime.split(':');
-    endDateTime.setHours(endHoursMinutes[0], endHoursMinutes[1]);
+    const workHours = parseInt(workHoursInput);
+    const endTime = new Date(startTime.getTime() + workHours * 60 * 60 * 1000);
 
-    updateTimer(startDateTime, endDateTime);
+    document.getElementById('expected-end-time').textContent = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    timerInterval = setInterval(() => {
-        updateTimer(startDateTime, endDateTime);
-    }, 500);
+    // Atualiza o tempo decorrido e o tempo restante a cada segundo
+    setInterval(() => {
+        const now = new Date();
+        const elapsedMs = now - startTime;
+        const remainingMs = endTime - now;
+
+        document.getElementById('elapsed-time').textContent = formatTime(elapsedMs);
+        document.getElementById('remaining-time').textContent = remainingMs > 0 ? formatTime(remainingMs) : "00:00:00";
+    }, 1000);
 }
 
-function updateTimer(startDateTime, endDateTime) {
-    const now = new Date();
-    
-    // Tempo decorrido
-    const elapsedTime = Math.max(0, now - startDateTime);
-    const elapsedHours = Math.floor(elapsedTime / (1000 * 60 * 60));
-    const elapsedMinutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
-    const elapsedSeconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
-    document.getElementById('elapsed-time').textContent = formatTime(elapsedHours, elapsedMinutes, elapsedSeconds);
+function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
-    // Tempo restante
-    const remainingTime = Math.max(0, endDateTime - now);
-    const remainingHours = Math.floor(remainingTime / (1000 * 60 * 60));
-    const remainingMinutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-    const remainingSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-    document.getElementById('remaining-time').textContent = formatTime(remainingHours, remainingMinutes, remainingSeconds);
-
-    // Parar o contador quando o tempo acabar
-    if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        alert('O expediente acabou!');
-    }
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
-function formatTime(hours, minutes, seconds) {
-    return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-}
-
-function padZero(num) {
+function pad(num) {
     return num.toString().padStart(2, '0');
 }
